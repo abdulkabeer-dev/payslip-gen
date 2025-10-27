@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Payslip Generator</title>
+    
+    <!-- 1. Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Load jsPDF and jspdf-autotable for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- 3. Configure Tailwind & Add custom styles -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Custom file input */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        .file-input-button {
+            border: 2px dashed #cbd5e1;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            color: #475569;
+            background-color: #f8fafc;
+            transition: all 0.2s ease;
+        }
+        
+        .file-input-wrapper:hover .file-input-button {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            color: #2563eb;
+        }
+        
+        .file-input-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            height: 100%;
+            width: 100%;
+        }
+
+        .remove-btn {
+            background-color: #fee2e2;
+            color: #dc2626;
+            border-radius: 9999px;
+            width: 1.75rem;
+            height: 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            line-height: 1;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .remove-btn:hover {
+            background-color: #fecaca;
+            color: #b91c1c;
+        }
+
+        .add-btn {
+            background-color: #e0e7ff;
+            color: #4f46e5;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .add-btn:hover {
+            background-color: #c7d2fe;
+        }
+        
+        .generate-btn {
+            background-color: #16a34a;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        
+        .generate-btn:hover {
+            background-color: #15803d;
+        }
+        
+        /* Simple loading spinner */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none; /* Hidden by default */
+            margin-right: 0.75rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Custom message box for alerts */
+        #message-box {
+            position: fixed;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #dc2626;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transition: top 0.5s ease-in-out;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        #message-box.success {
+            background-color: #16a34a;
+        }
+        #message-box.show {
+            top: 20px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Corporate Payslip Generator</h1>
+
+        <!-- Form Container -->
+        <form id="payslip-form" class="space-y-8">
+            
+            <!-- Section 1: Company Details -->
+            <section>
+                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Company Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Company Name -->
+                    <div>
+                        <label for="company-name" class="block text-sm font-medium text-gray-600 mb-1">Company Name</label>
+                        <input type="text" id="company-name" placeholder="e.g., RK Technologies" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <!-- Payslip for the Month -->
+                    <div>
+                        <label for="payslip-month" class="block text-sm font-medium text-gray-600 mb-1">Payslip for the Month</label>
+                        <input type="month" id="payslip-month" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Company Logo -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Company Logo</label>
+                        <div class="file-input-wrapper">
+                            <button type="button" class="file-input-button" id="file-button-text">
+                                Click to upload logo
+                            </button>
+                            <input type="file" id="company-logo" accept="image/png, image/jpeg">
+                        </div>
+                        <div id="logo-preview-wrapper" class="hidden mt-2 flex items-center gap-3">
+                            <img id="logo-preview" class="w-16 h-16 object-contain border rounded-md p-1" alt="Logo Preview">
+                            <span id="logo-filename" class="text-sm text-gray-600"></span>
+                            <button type="button" id="remove-logo" class="remove-btn" title="Remove logo">&times;</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 2: Employee Pay Summary -->
+            <section>
+                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Employee Pay Summary</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="employee-name" class="block text-sm font-medium text-gray-600 mb-1">Employee Name</label>
+                        <input type="text" id="employee-name" placeholder="Employee Name" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Employee Name">
+                    </div>
+                    <div>
+                        <label for="employee-id" class="block text-sm font-medium text-gray-600 mb-1">Employee ID</label>
+                        <input type="text" id="employee-id" placeholder="Employee ID" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Employee ID">
+                    </div>
+                    <div>
+                        <label for="pay-period" class="block text-sm font-medium text-gray-600 mb-1">Pay Period</label>
+                        <input type="text" id="pay-period" placeholder="Pay Period (e.g., 2024-09)" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Pay Period">
+                    </div>
+                    <div>
+                        <label for="paid-days" class="block text-sm font-medium text-gray-600 mb-1">Paid Days</label>
+                        <input type="number" id="paid-days" placeholder="Paid Days" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Paid Days">
+                    </div>
+                    <div>
+                        <label for="loss-of-pay-days" class="block text-sm font-medium text-gray-600 mb-1">Loss of Pay Days</label>
+                        <input type="number" id="loss-of-pay-days" placeholder="Loss of Pay Days" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Loss of Pay Days">
+                    </div>
+                    <div>
+                        <label for="pay-date" class="block text-sm font-medium text-gray-600 mb-1">Pay Date</label>
+                        <input type="date" id="pay-date" placeholder="Pay Date" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Pay Date">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Income Details -->
+            <section>
+                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Income Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                    
+                    <!-- Earnings -->
+                    <div class="space-y-3">
+                        <h3 class="text-lg font-medium text-gray-600">Earnings</h3>
+                        <div id="earnings-container" class="space-y-2">
+                            <!-- Dynamic earnings rows will be injected here -->
+                            <div class="flex items-center gap-2">
+                                <input type="text" value="Basic" class="earning-label w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Earning Type">
+                                <input type="number" class="earning-value w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Amount">
+                                <button type="button" class="remove-btn" onclick="removeRow(this)">&times;</button>
+                            </div>
+                        </div>
+                        <button type="button" id="add-earning" class="add-btn">+ Add Earning</button>
+                    </div>
+                    
+                    <!-- Deductions -->
+                    <div class="space-y-3">
+                        <h3 class="text-lg font-medium text-gray-600">Deductions</h3>
+                        <div id="deductions-container" class="space-y-2">
+                            <!-- Dynamic deductions rows will be injected here -->
+                            <div class="flex items-center gap-2">
+                                <input type="text" value="Income Tax" class="deduction-label w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Deduction Type">
+                                <input type="number" class="deduction-value w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Amount">
+                                <button type="button" class="remove-btn" onclick="removeRow(this)">&times;</button>
+                            </div>
+                        </div>
+                        <button type="button" id="add-deduction" class="add-btn">+ Add Deduction</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Summary -->
+            <section class="bg-gray-50 p-6 rounded-lg">
+                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Net Pay Summary</h2>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center text-lg">
+                        <span class="font-medium text-gray-600">Total Earnings:</span>
+                        <span id="total-earnings" class="font-semibold text-gray-800">₹0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center text-lg">
+                        <span class="font-medium text-gray-600">Total Deductions:</span>
+                        <span id="total-deductions" class="font-semibold text-red-600">₹0.00</span>
+                    </div>
+                    <hr class="my-2 border-t-2 border-gray-300 border-dashed">
+                    <div class="flex justify-between items-center text-2xl">
+                        <span class="font-bold text-gray-800">Net Pay:</span>
+                        <span id="net-pay" class="font-bold text-green-700">₹0.00</span>
+                    </div>
+                    <div class="text-right text-gray-500 italic mt-1">
+                        (<span id="net-pay-in-words">Rupees Zero Only</span>)
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 5: Actions -->
+            <section>
+                <button type="button" id="generate-pdf" class="generate-btn flex items-center justify-center">
+                    <div id="spinner" class="spinner"></div>
+                    <span>Generate PDF</span>
+                </button>
+            </section>
+            
+        </form>
+    </div>
+
+    <!-- Custom Message Box -->
+    <div id="message-box">This is a message!</div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- STATE ---
+            let logoBase64 = null; // Will hold the data:URL string for the logo
+            
+            // --- SELECTORS ---
+            const logoInput = document.getElementById('company-logo');
+            const logoPreview = document.getElementById('logo-preview');
+            const logoPreviewWrapper = document.getElementById('logo-preview-wrapper');
+            const logoFilename = document.getElementById('logo-filename');
+            const fileButtonText = document.getElementById('file-button-text');
+            const removeLogoBtn = document.getElementById('remove-logo');
+            
+            const addEarningBtn = document.getElementById('add-earning');
+            const addDeductionBtn = document.getElementById('add-deduction');
+            const earningsContainer = document.getElementById('earnings-container');
+            const deductionsContainer = document.getElementById('deductions-container');
+            
+            const form = document.getElementById('payslip-form');
+            const generatePdfBtn = document.getElementById('generate-pdf');
+            const spinner = document.getElementById('spinner');
+
+            // --- Link Payslip Month to Pay Period ---
+            const payslipMonthInput = document.getElementById('payslip-month');
+            const payPeriodInput = document.getElementById('pay-period');
+            
+            payslipMonthInput.addEventListener('input', () => {
+                payPeriodInput.value = payslipMonthInput.value;
+            });
+            // ---
+
+            // --- EVENT LISTENERS ---
+            
+            // 1. Logo Upload
+            logoInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                        showMessage('File is too large. Max size is 2MB.', 'error');
+                        logoInput.value = ''; // Clear the input
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        logoBase64 = event.target.result;
+                        logoPreview.src = logoBase64;
+                        logoFilename.textContent = file.name;
+                        logoPreviewWrapper.classList.remove('hidden');
+                        fileButtonText.textContent = 'Change logo';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // 2. Remove Logo
+            removeLogoBtn.addEventListener('click', () => {
+                logoBase64 = null;
+                logoInput.value = ''; // Clear the file input
+                logoPreviewWrapper.classList.add('hidden');
+                logoPreview.src = '';
+                logoFilename.textContent = '';
+                fileButtonText.textContent = 'Click to upload logo';
+            });
+
+            // 3. Add Earning Row
+            addEarningBtn.addEventListener('click', () => {
+                const row = createDynamicRow('earning');
+                earningsContainer.appendChild(row);
+            });
+
+            // 4. Add Deduction Row
+            addDeductionBtn.addEventListener('click', () => {
+                const row = createDynamicRow('deduction');
+                deductionsContainer.appendChild(row);
+            });
+            
+            // 5. Calculate totals on any input change in the form
+            form.addEventListener('input', calculateTotals);
+
+            // 6. Generate PDF
+            generatePdfBtn.addEventListener('click', () => {
+                // Show spinner, disable button
+                spinner.style.display = 'block';
+                generatePdfBtn.disabled = true;
+                generatePdfBtn.classList.add('opacity-75', 'cursor-not-allowed');
+
+                // Use setTimeout to allow the UI to update (show spinner) before
+                // the blocking PDF generation task starts.
+                setTimeout(() => {
+                    try {
+                        generatePDF();
+                        showMessage('Payslip generated successfully!', 'success');
+                    } catch (error) {
+                        console.error('Error generating PDF:', error);
+                        showMessage('Error generating PDF. Check console.', 'error');
+                    } finally {
+                        // Hide spinner, re-enable button
+                        spinner.style.display = 'none';
+                        generatePdfBtn.disabled = false;
+                        generatePdfBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                    }
+                }, 50); // 50ms delay
+            });
+
+            // --- HELPER FUNCTIONS ---
+
+            /**
+             * Creates a new input row for earnings or deductions
+             * @param {string} type - 'earning' or 'deduction'
+             */
+            function createDynamicRow(type) {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-2';
+                
+                div.innerHTML = `
+                    <input type="text" class="${type}-label w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="${type.charAt(0).toUpperCase() + type.slice(1)} Type">
+                    <input type="number" class="${type}-value w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Amount">
+                    <button type="button" class="remove-btn" onclick="removeRow(this)">&times;</button>
+                `;
+                return div;
+            }
+
+            /**
+             * Calculates all totals and updates the UI.
+             */
+            function calculateTotals() {
+                let totalEarnings = 0;
+                let totalDeductions = 0;
+                
+                // Sum earnings
+                document.querySelectorAll('.earning-value').forEach(input => {
+                    totalEarnings += parseFloat(input.value) || 0;
+                });
+                
+                // Sum deductions
+                document.querySelectorAll('.deduction-value').forEach(input => {
+                    totalDeductions += parseFloat(input.value) || 0;
+                });
+                
+                const netPay = totalEarnings - totalDeductions;
+                
+                // Update UI
+                document.getElementById('total-earnings').textContent = formatCurrency(totalEarnings);
+                document.getElementById('total-deductions').textContent = formatCurrency(totalDeductions);
+                document.getElementById('net-pay').textContent = formatCurrency(netPay);
+                document.getElementById('net-pay-in-words').textContent = `(Rupees ${numberToWords(netPay)} Only)`;
+            }
+
+            /**
+             * Formats a number as Indian Rupees currency.
+             * @param {number} num - The number to format.
+             */
+            function formatCurrency(num) {
+                // Use Intl.NumberFormat for robust currency formatting
+                return new Intl.NumberFormat('en-IN', {
+                    style: 'currency',
+                    currency: 'INR',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }).format(num);
+            }
+            
+            /**
+             * Displays a custom message box.
+             * @param {string} message - The message to display.
+             * @param {string} type - 'success' or 'error'.
+             */
+            function showMessage(message, type = 'error') {
+                const msgBox = document.getElementById('message-box');
+                msgBox.textContent = message;
+                msgBox.className = type === 'success' ? 'success' : '';
+                
+                msgBox.classList.add('show');
+                
+                setTimeout(() => {
+                    msgBox.classList.remove('show');
+                }, 3000); // Hide after 3 seconds
+            }
+
+            /**
+             * Main PDF Generation Logic
+             */
+            function generatePDF() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                const docWidth = doc.internal.pageSize.getWidth();
+                const margin = 15;
+                let cursorY = 20;
+
+                // --- 1. Add Logo and Company Name ---
+                if (logoBase64) {
+                    try {
+                        // Check image type. jsPDF supports PNG, JPEG
+                        const imgType = logoBase64.startsWith('data:image/png') ? 'PNG' : 'JPEG';
+                        // Add logo to the top right
+                        doc.addImage(logoBase64, imgType, docWidth - margin - 30, 15, 30, 30);
+                    } catch (imgError) {
+                        console.error("Error adding image to PDF:", imgError);
+                        // Don't fail the whole PDF, just skip the logo
+                    }
+                }
+                
+                const companyName = document.getElementById('company-name').value || 'Company Name';
+                doc.setFontSize(22);
+                doc.setFont('helvetica', 'bold');
+                doc.text(companyName, margin, cursorY);
+                
+                const payslipMonth = document.getElementById('payslip-month').value;
+                const payslipTitle = payslipMonth 
+                    ? `Payslip for ${new Date(payslipMonth + '-02').toLocaleString('default', { month: 'long', year: 'numeric' })}`
+                    : 'Payslip';
+                
+                cursorY += 8;
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                doc.text(payslipTitle, margin, cursorY);
+
+                cursorY += 15; // Add space before tables
+
+                // --- 2. Employee Details (Manual Text Layout) ---
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Employee Details', margin, cursorY);
+                cursorY += 8;
+                
+                const empDetailsInputs = [
+                    'employee-name', 'employee-id', 'pay-period', 
+                    'paid-days', 'loss-of-pay-days', 'pay-date'
+                ];
+                
+                const empDetailsBody = empDetailsInputs.map(id => {
+                    const el = document.getElementById(id);
+                    // Use the new label's text content first, fallback to data-label
+                    const labelEl = document.querySelector(`label[for='${id}']`);
+                    const label = labelEl ? labelEl.textContent : (el.getAttribute('data-label') || el.placeholder);
+                    let value = el.value || '-';
+                    if (el.type === 'date' && el.value) {
+                        // Format date nicely
+                        value = new Date(el.value).toLocaleDateString('en-GB'); // dd/mm/yyyy
+                    }
+                    return [label, value];
+                }).filter(row => row[1] !== '-'); // Only show rows with values
+
+                if (empDetailsBody.length > 0) {
+                    const leftColX = margin + 1; // Indent slightly
+                    const rightColX = margin + 70; // Column for values
+                    const rowHeight = 7;
+                    
+                    doc.setFontSize(10);
+                    
+                    empDetailsBody.forEach(row => {
+                        doc.setFont('helvetica', 'bold');
+                        doc.text(row[0], leftColX, cursorY);
+                        doc.setFont('helvetica', 'normal');
+                        doc.text(row[1], rightColX, cursorY);
+                        
+                        cursorY += rowHeight;
+                    });
+                    
+                    // Add a subtle line after details
+                    cursorY -= (rowHeight / 2); // Move up slightly
+                    doc.setDrawColor(229, 231, 235); // gray-200
+                    doc.setLineWidth(0.25);
+                    doc.line(margin, cursorY, docWidth - margin, cursorY);
+                    
+                } else {
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'italic');
+                    doc.text('No employee details provided.', margin, cursorY);
+                    cursorY += 10;
+                }
+                
+                cursorY += 10; // Space before next section
+
+                // --- 3. Earnings and Deductions Tables (Side-by-Side) ---
+                const earningsBody = [];
+                document.querySelectorAll('#earnings-container .flex').forEach(row => {
+                    const label = row.querySelector('.earning-label').value;
+                    const value = parseFloat(row.querySelector('.earning-value').value) || 0;
+                    if (label || value > 0) { // Only add if label or value exists
+                        earningsBody.push([label || 'N/A', formatCurrency(value)]);
+                    }
+                });
+                
+                const deductionsBody = [];
+                document.querySelectorAll('#deductions-container .flex').forEach(row => {
+                    const label = row.querySelector('.deduction-label').value;
+                    const value = parseFloat(row.querySelector('.deduction-value').value) || 0;
+                    if (label || value > 0) { // Only add if label or value exists
+                        deductionsBody.push([label || 'N/A', formatCurrency(value)]);
+                    }
+                });
+
+                // Add Total rows
+                const totalEarnings = document.getElementById('total-earnings').textContent;
+                const totalDeductions = document.getElementById('total-deductions').textContent;
+                
+                earningsBody.push([{
+                    content: 'Total Earnings',
+                    styles: { fontStyle: 'bold', fillColor: '#f3f4f6' }
+                }, {
+                    content: totalEarnings,
+                    styles: { fontStyle: 'bold', fillColor: '#f3f4f6', halign: 'right' }
+                }]);
+                
+                deductionsBody.push([{
+                    content: 'Total Deductions',
+                    styles: { fontStyle: 'bold', fillColor: '#f3f4f6' }
+                }, {
+                    content: totalDeductions,
+                    styles: { fontStyle: 'bold', fillColor: '#f3f4f6', halign: 'right' }
+                }]);
+                
+                const tableColWidth = (docWidth - (margin * 3)) / 2; // Column width for side-by-side
+                
+                // --- 3. Earnings and Deductions Titles ---
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Earnings', margin, cursorY);
+                doc.text('Deductions', margin + tableColWidth + margin, cursorY);
+                cursorY += 8;
+                
+                const tablesDataY = cursorY; // Y-position for the data tables
+
+                doc.autoTable({
+                    startY: tablesDataY,
+                    // NO HEAD
+                    body: earningsBody,
+                    theme: 'grid',
+                    styles: { cellPadding: 2, fontSize: 10, halign: 'right', lineColor: [229, 231, 235], lineWidth: 0.25 },
+                    columnStyles: { 0: { halign: 'left' } },
+                    tableWidth: tableColWidth,
+                    margin: { left: margin },
+                    didDrawPage: (data) => {
+                        cursorY = data.cursor.y; // Update cursor position
+                    }
+                });
+
+                doc.autoTable({
+                    startY: tablesDataY , // Start at same Y as first table
+                    // NO HEAD
+                    body: deductionsBody,
+                    theme: 'grid',
+                    styles: { cellPadding: 2, fontSize: 10, halign: 'right', lineColor: [229, 231, 235], lineWidth: 0.25 },
+                    columnStyles: { 0: { halign: 'left' } },
+                    tableWidth: tableColWidth,
+                    margin: { left: margin + tableColWidth + margin },
+                    didDrawPage: (data) => {
+                        // We take the final Y of whichever table is longer
+                        cursorY = Math.max(cursorY, data.cursor.y);
+                    }
+                });
+                
+                cursorY += 15; // Space after tables
+
+                // --- 4. Net Pay Summary ---
+                const netPay = document.getElementById('net-pay').textContent;
+                const netPayInWords = document.getElementById('net-pay-in-words').textContent;
+                
+                // Draw a summary box (outline only)
+                doc.setDrawColor(229, 231, 235); // gray-200
+                doc.setLineWidth(0.5);
+                doc.roundedRect(margin, cursorY, docWidth - (margin * 2), 25, 3, 3, 'S'); // 'S' for Stroke
+                
+                doc.setFontSize(16);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(21, 128, 61); // text-green-700
+                doc.text('Net Pay:', margin + 10, cursorY + 12);
+                doc.text(netPay, docWidth - margin - 10, cursorY + 12, { align: 'right' });
+                
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'italic');
+                doc.setTextColor(107, 114, 128); // text-gray-500
+                doc.text(netPayInWords, docWidth - margin - 10, cursorY + 19, { align: 'right' });
+                
+                // --- 5. Save the PDF ---
+                const filename = `Payslip_${(companyName || '').replace(/ /g, '_')}_${(payslipMonth || 'details')}.pdf`;
+                doc.save(filename);
+            }
+            
+            // --- ON-LOAD INITIALIZATION ---
+            calculateTotals(); // Run once on load
+        });
+
+        // --- GLOBAL HELPER FUNCTIONS (can be accessed by inline onclick) ---
+
+        /**
+         * Removes a dynamic row (parent .flex element)
+         * @param {HTMLElement} el - The remove button element
+         */
+        function removeRow(el) {
+            el.closest('.flex').remove();
+            // We need to manually trigger calculation as 'input' event doesn't fire on element removal
+            document.getElementById('payslip-form').dispatchEvent(new Event('input'));
+        }
+        
+        /**
+         * Converts a number to Indian currency words.
+         * Handles up to 99,99,99,999.99
+         * @param {number} num - The number to convert.
+         */
+        function numberToWords(num) {
+            const a = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+            const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+            
+            const n = parseFloat(num).toFixed(2).split('.');
+            const rupees = parseInt(n[0], 10);
+            const paise = parseInt(n[1], 10);
+            
+            if (isNaN(rupees)) {
+                return 'Zero';
+            }
+            if (rupees === 0 && paise === 0) {
+                return 'Zero';
+            }
+
+            function inWords(n) {
+                let str = '';
+                if (n > 99) {
+                    str += inWords(Math.floor(n / 100)) + ' Hundred ';
+                    n %= 100;
+                }
+                if (n > 19) {
+                    str += b[Math.floor(n / 10)] + ' ' + a[n % 10];
+                } else {
+                    str += a[n];
+                }
+                return str.trim();
+            }
+
+            let str = '';
+            let numIn = rupees;
+            
+            if (numIn === 0) {
+                str = 'Zero';
+            } else {
+                str = [
+                    inWords(Math.floor(numIn / 10000000) % 100), // Crores
+                    inWords(Math.floor(numIn / 100000) % 100),   // Lakhs
+                    inWords(Math.floor(numIn / 1000) % 100),    // Thousands
+                    inWords(Math.floor(numIn) % 1000)            // Hundreds
+                ].map((val, i) => val + (val ? [' Crore', ' Lakh', ' Thousand', ''][i] + ' ' : '')).join('');
+            }
+
+            str = str.trim() || 'Zero';
+            
+            if (paise > 0) {
+                str += ' and ' + (inWords(paise) + ' Paise').trim();
+            }
+            
+            // Tidy up extra spaces
+            return str.replace(/\s+/g, ' ');
+        }
+    </script>
+</body>
+</html>
+
+
+
+

@@ -433,12 +433,12 @@
                 
                 // Sum earnings
                 document.querySelectorAll('.earning-value').forEach(input => {
-                    totalEarnings += parseFloat(input.value) || 0;
+                    totalEarnings += parseFloat(input.value.replace(/,/g, '')) || 0;
                 });
                 
                 // Sum deductions
                 document.querySelectorAll('.deduction-value').forEach(input => {
-                    totalDeductions += parseFloat(input.value) || 0;
+                    totalDeductions += parseFloat(input.value.replace(/,/g, '')) || 0;
                 });
                 
                 const netPay = totalEarnings - totalDeductions;
@@ -585,7 +585,16 @@
                         doc.setFont('helvetica', 'bold');
                         doc.text(row[0], leftColX, cursorY);
                         doc.setFont('helvetica', 'normal');
-                        doc.text(row[1], rightColX, cursorY);
+                        
+                        // Manually calculate x position for right-aligned-like text
+                        // to avoid jsPDF 'align: right' bugs
+                        const valueWidth = doc.getTextWidth(row[1]);
+                        const valueX = docWidth - margin - 10 - valueWidth; // Align to right edge
+                        
+                        // But ensure it doesn't overlap the label
+                        const finalValueX = Math.max(rightColX, valueX); 
+                        
+                        doc.text(row[1], finalValueX, cursorY);
                         
                         cursorY += rowHeight;
                     });
@@ -610,12 +619,12 @@
                 // Re-calculate totals as numbers for PDF formatting
                 let totalEarningsNum = 0;
                 document.querySelectorAll('.earning-value').forEach(input => {
-                    totalEarningsNum += parseFloat(input.value) || 0;
+                    totalEarningsNum += parseFloat(input.value.replace(/,/g, '')) || 0;
                 });
 
                 let totalDeductionsNum = 0;
                 document.querySelectorAll('.deduction-value').forEach(input => {
-                    totalDeductionsNum += parseFloat(input.value) || 0;
+                    totalDeductionsNum += parseFloat(input.value.replace(/,/g, '')) || 0;
                 });
 
                 const netPayNum = totalEarningsNum - totalDeductionsNum;
@@ -626,7 +635,7 @@
                 const earningsBody = [];
                 document.querySelectorAll('#earnings-container .flex').forEach(row => {
                     const label = row.querySelector('.earning-label').value;
-                    const value = parseFloat(row.querySelector('.earning-value').value) || 0;
+                    const value = parseFloat(row.querySelector('.earning-value').value.replace(/,/g, '')) || 0;
                     if (label || value > 0) { // Only add if label or value exists
                         earningsBody.push([label || 'N/A', formatPdfNum(value)]);
                     }
@@ -635,7 +644,7 @@
                 const deductionsBody = [];
                 document.querySelectorAll('#deductions-container .flex').forEach(row => {
                     const label = row.querySelector('.deduction-label').value;
-                    const value = parseFloat(row.querySelector('.deduction-value').value) || 0;
+                    const value = parseFloat(row.querySelector('.deduction-value').value.replace(/,/g, '')) || 0;
                     if (label || value > 0) { // Only add if label or value exists
                         deductionsBody.push([label || 'N/A', formatPdfNum(value)]);
                     }
@@ -716,12 +725,19 @@
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(21, 128, 61); // text-green-700
                 doc.text('Net Pay:', margin + 10, cursorY + 12);
-                doc.text(formatPdfNum(netPayNum), docWidth - margin - 10, cursorY + 12, { align: 'right' });
+                
+                // FIX: Manually calculate position instead of using `align: 'right'`
+                const netPayText = formatPdfNum(netPayNum);
+                const netPayTextWidth = doc.getTextWidth(netPayText);
+                doc.text(netPayText, docWidth - margin - 10 - netPayTextWidth, cursorY + 12);
                 
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'italic');
                 doc.setTextColor(107, 114, 128); // text-gray-500
-                doc.text(netPayInWords, docWidth - margin - 10, cursorY + 19, { align: 'right' });
+                
+                // FIX: Manually calculate position for "in words" text
+                const netPayInWordsWidth = doc.getTextWidth(netPayInWords);
+                doc.text(netPayInWords, docWidth - margin - 10 - netPayInWordsWidth, cursorY + 19);
                 
                 // --- 5. Save the PDF ---
                 const filename = `Payslip_${(companyName || '').replace(/ /g, '_')}_${(payslipMonth || 'details')}.pdf`;
@@ -804,6 +820,7 @@
     </script>
 </body>
 </html>
+
 
 
 

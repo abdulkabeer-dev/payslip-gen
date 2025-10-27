@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Corporate Payslip Generator</title>
     
-    <!-- 1. Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 1. Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 2. Load jsPDF and jspdf-autotable for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- 2. Load jsPDF and jspdf-autotable for PDF generation --><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     
-    <!-- 3. Configure Tailwind & Add custom styles -->
-    <script>
+    <!-- 3. Configure Tailwind & Add custom styles --><script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -169,27 +166,22 @@
     <div class="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-lg">
         <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Corporate Payslip Generator</h1>
 
-        <!-- Form Container -->
-        <form id="payslip-form" class="space-y-8">
+        <!-- Form Container --><form id="payslip-form" class="space-y-8">
             
-            <!-- Section 1: Company Details -->
-            <section>
+            <!-- Section 1: Company Details --><section>
                 <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Company Details</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Company Name -->
-                    <div>
+                    <!-- Company Name --><div>
                         <label for="company-name" class="block text-sm font-medium text-gray-600 mb-1">Company Name</label>
                         <input type="text" id="company-name" placeholder="e.g., RK Technologies" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     
-                    <!-- Payslip for the Month -->
-                    <div>
+                    <!-- Payslip for the Month --><div>
                         <label for="payslip-month" class="block text-sm font-medium text-gray-600 mb-1">Payslip for the Month</label>
                         <input type="month" id="payslip-month" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
 
-                    <!-- Company Logo -->
-                    <div class="md:col-span-2">
+                    <!-- Company Logo --><div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-600 mb-1">Company Logo</label>
                         <div class="file-input-wrapper">
                             <button type="button" class="file-input-button" id="file-button-text">
@@ -206,8 +198,7 @@
                 </div>
             </section>
             
-            <!-- Section 2: Employee Pay Summary -->
-            <section>
+            <!-- Section 2: Employee Pay Summary --><section>
                 <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Employee Pay Summary</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -237,17 +228,14 @@
                 </div>
             </section>
 
-            <!-- Section 3: Income Details -->
-            <section>
+            <!-- Section 3: Income Details --><section>
                 <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Income Details</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                     
-                    <!-- Earnings -->
-                    <div class="space-y-3">
+                    <!-- Earnings --><div class="space-y-3">
                         <h3 class="text-lg font-medium text-gray-600">Earnings</h3>
                         <div id="earnings-container" class="space-y-2">
-                            <!-- Dynamic earnings rows will be injected here -->
-                            <div class="flex items-center gap-2">
+                            <!-- Dynamic earnings rows will be injected here --><div class="flex items-center gap-2">
                                 <input type="text" value="Basic" class="earning-label w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Earning Type">
                                 <input type="number" class="earning-value w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Amount">
                                 <button type="button" class="remove-btn" onclick="removeRow(this)">&times;</button>
@@ -256,12 +244,10 @@
                         <button type="button" id="add-earning" class="add-btn">+ Add Earning</button>
                     </div>
                     
-                    <!-- Deductions -->
-                    <div class="space-y-3">
+                    <!-- Deductions --><div class="space-y-3">
                         <h3 class="text-lg font-medium text-gray-600">Deductions</h3>
                         <div id="deductions-container" class="space-y-2">
-                            <!-- Dynamic deductions rows will be injected here -->
-                            <div class="flex items-center gap-2">
+                            <!-- Dynamic deductions rows will be injected here --><div class="flex items-center gap-2">
                                 <input type="text" value="Income Tax" class="deduction-label w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Deduction Type">
                                 <input type="number" class="deduction-value w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Amount">
                                 <button type="button" class="remove-btn" onclick="removeRow(this)">&times;</button>
@@ -272,8 +258,7 @@
                 </div>
             </section>
 
-            <!-- Section 4: Summary -->
-            <section class="bg-gray-50 p-6 rounded-lg">
+            <!-- Section 4: Summary --><section class="bg-gray-50 p-6 rounded-lg">
                 <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Net Pay Summary</h2>
                 <div class="space-y-3">
                     <div class="flex justify-between items-center text-lg">
@@ -295,8 +280,7 @@
                 </div>
             </section>
             
-            <!-- Section 5: Actions -->
-            <section>
+            <!-- Section 5: Actions --><section>
                 <button type="button" id="generate-pdf" class="generate-btn flex items-center justify-center">
                     <div id="spinner" class="spinner"></div>
                     <span>Generate PDF</span>
@@ -306,14 +290,13 @@
         </form>
     </div>
 
-    <!-- Custom Message Box -->
-    <div id="message-box">This is a message!</div>
+    <!-- Custom Message Box --><div id="message-box">This is a message!</div>
 
-    <!-- JavaScript Logic -->
-    <script>
+    <!-- JavaScript Logic --><script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- STATE ---
             let logoBase64 = null; // Will hold the data:URL string for the logo
+            let logoDimensions = { width: 0, height: 0 }; // Store original logo dimensions
             
             // --- SELECTORS ---
             const logoInput = document.getElementById('company-logo');
@@ -359,6 +342,14 @@
                         logoFilename.textContent = file.name;
                         logoPreviewWrapper.classList.remove('hidden');
                         fileButtonText.textContent = 'Change logo';
+
+                        // Get actual image dimensions
+                        const img = new Image();
+                        img.onload = () => {
+                            logoDimensions.width = img.width;
+                            logoDimensions.height = img.height;
+                        };
+                        img.src = logoBase64;
                     };
                     reader.readAsDataURL(file);
                 }
@@ -367,6 +358,7 @@
             // 2. Remove Logo
             removeLogoBtn.addEventListener('click', () => {
                 logoBase64 = null;
+                logoDimensions = { width: 0, height: 0 };
                 logoInput.value = ''; // Clear the file input
                 logoPreviewWrapper.classList.add('hidden');
                 logoPreview.src = '';
@@ -501,12 +493,40 @@
                 let cursorY = 20;
 
                 // --- 1. Add Logo and Company Name ---
-                if (logoBase64) {
+                let logoActualWidth = 0;
+                let logoActualHeight = 0;
+
+                if (logoBase64 && logoDimensions.width > 0 && logoDimensions.height > 0) {
                     try {
-                        // Check image type. jsPDF supports PNG, JPEG
                         const imgType = logoBase64.startsWith('data:image/png') ? 'PNG' : 'JPEG';
-                        // Add logo to the top right
-                        doc.addImage(logoBase64, imgType, docWidth - margin - 30, 15, 30, 30);
+                        
+                        // Define max width for the logo in PDF units (mm)
+                        const maxLogoWidth = 40; 
+                        
+                        // Calculate aspect ratio
+                        const aspectRatio = logoDimensions.width / logoDimensions.height;
+
+                        // Determine the dimensions to use, maintaining aspect ratio
+                        let finalLogoWidth = maxLogoWidth;
+                        let finalLogoHeight = maxLogoWidth / aspectRatio;
+
+                        // If the calculated height is too large, scale based on a max height instead
+                        const maxLogoHeight = 20; // Maximum allowed height for the logo
+                        if (finalLogoHeight > maxLogoHeight) {
+                            finalLogoHeight = maxLogoHeight;
+                            finalLogoWidth = maxLogoHeight * aspectRatio;
+                        }
+
+                        // REMOVED: The minLogoSize check was flawed and could break aspect ratio.
+                        // The scaling above is sufficient.
+
+
+                        // Position logo to the top right
+                        doc.addImage(logoBase64, imgType, docWidth - margin - finalLogoWidth, 15, finalLogoWidth, finalLogoHeight);
+                        
+                        logoActualWidth = finalLogoWidth; // Store for potential later use
+                        logoActualHeight = finalLogoHeight;
+
                     } catch (imgError) {
                         console.error("Error adding image to PDF:", imgError);
                         // Don't fail the whole PDF, just skip the logo
@@ -767,7 +787,6 @@
     </script>
 </body>
 </html>
-
 
 
 

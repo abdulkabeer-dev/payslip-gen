@@ -606,12 +606,29 @@
                 cursorY += 10; // Space before next section
 
                 // --- 3. Earnings and Deductions Tables (Side-by-Side) ---
+                
+                // Re-calculate totals as numbers for PDF formatting
+                let totalEarningsNum = 0;
+                document.querySelectorAll('.earning-value').forEach(input => {
+                    totalEarningsNum += parseFloat(input.value) || 0;
+                });
+
+                let totalDeductionsNum = 0;
+                document.querySelectorAll('.deduction-value').forEach(input => {
+                    totalDeductionsNum += parseFloat(input.value) || 0;
+                });
+
+                const netPayNum = totalEarningsNum - totalDeductionsNum;
+                // Helper just for PDF to format as a clean number
+                const formatPdfNum = (num) => (parseFloat(num) || 0).toFixed(2);
+
+
                 const earningsBody = [];
                 document.querySelectorAll('#earnings-container .flex').forEach(row => {
                     const label = row.querySelector('.earning-label').value;
                     const value = parseFloat(row.querySelector('.earning-value').value) || 0;
                     if (label || value > 0) { // Only add if label or value exists
-                        earningsBody.push([label || 'N/A', formatCurrency(value)]);
+                        earningsBody.push([label || 'N/A', formatPdfNum(value)]);
                     }
                 });
                 
@@ -620,19 +637,19 @@
                     const label = row.querySelector('.deduction-label').value;
                     const value = parseFloat(row.querySelector('.deduction-value').value) || 0;
                     if (label || value > 0) { // Only add if label or value exists
-                        deductionsBody.push([label || 'N/A', formatCurrency(value)]);
+                        deductionsBody.push([label || 'N/A', formatPdfNum(value)]);
                     }
                 });
 
                 // Add Total rows
-                const totalEarnings = document.getElementById('total-earnings').textContent;
-                const totalDeductions = document.getElementById('total-deductions').textContent;
+                // const totalEarnings = document.getElementById('total-earnings').textContent;
+                // const totalDeductions = document.getElementById('total-deductions').textContent;
                 
                 earningsBody.push([{
                     content: 'Total Earnings',
                     styles: { fontStyle: 'bold', fillColor: '#f3f4f6' }
                 }, {
-                    content: totalEarnings,
+                    content: formatPdfNum(totalEarningsNum),
                     styles: { fontStyle: 'bold', fillColor: '#f3f4f6', halign: 'right' }
                 }]);
                 
@@ -640,7 +657,7 @@
                     content: 'Total Deductions',
                     styles: { fontStyle: 'bold', fillColor: '#f3f4f6' }
                 }, {
-                    content: totalDeductions,
+                    content: formatPdfNum(totalDeductionsNum),
                     styles: { fontStyle: 'bold', fillColor: '#f3f4f6', halign: 'right' }
                 }]);
                 
@@ -687,7 +704,7 @@
                 cursorY += 15; // Space after tables
 
                 // --- 4. Net Pay Summary ---
-                const netPay = document.getElementById('net-pay').textContent;
+                // const netPay = document.getElementById('net-pay').textContent;
                 const netPayInWords = document.getElementById('net-pay-in-words').textContent;
                 
                 // Draw a summary box (outline only)
@@ -699,7 +716,7 @@
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(21, 128, 61); // text-green-700
                 doc.text('Net Pay:', margin + 10, cursorY + 12);
-                doc.text(netPay, docWidth - margin - 10, cursorY + 12, { align: 'right' });
+                doc.text(formatPdfNum(netPayNum), docWidth - margin - 10, cursorY + 12, { align: 'right' });
                 
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'italic');
@@ -787,6 +804,7 @@
     </script>
 </body>
 </html>
+
 
 
 

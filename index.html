@@ -173,13 +173,30 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Company Name --><div>
                         <label for="company-name" class="block text-sm font-medium text-gray-600 mb-1">Company Name</label>
-                        <input type="text" id="company-name" placeholder="e.g., RK Technologies" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <input type="text" id="company-name" placeholder="e.g., RK Technologies" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Company Name">
                     </div>
                     
                     <!-- Payslip for the Month --><div>
                         <label for="payslip-month" class="block text-sm font-medium text-gray-600 mb-1">Payslip for the Month</label>
                         <input type="month" id="payslip-month" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
+
+                    <!-- Company Address -->
+                    <div class="md:col-span-2">
+                        <label for="company-address" class="block text-sm font-medium text-gray-600 mb-1">Company Address</label>
+                        <textarea id="company-address" placeholder="Company Address" rows="3" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Company Address"></textarea>
+                    </div>
+
+                    <!-- Company Email --><div>
+                        <label for="company-email" class="block text-sm font-medium text-gray-600 mb-1">Company Email</label>
+                        <input type="email" id="company-email" placeholder="e.g., info@company.com" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Company Email">
+                    </div>
+
+                    <!-- Company Number --><div>
+                        <label for="company-number" class="block text-sm font-medium text-gray-600 mb-1">Company Number</label>
+                        <input type="tel" id="company-number" placeholder="e.g., +91 1234567890" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Company Number">
+                    </div>
+
 
                     <!-- Company Logo --><div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-600 mb-1">Company Logo</label>
@@ -197,10 +214,10 @@
                     </div>
                 </div>
             </section>
-            
-            <!-- Section 2: Employee Pay Summary --><section>
-                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Employee Pay Summary</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Section 2: Employee Details --><section>
+                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Employee Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
                         <label for="employee-name" class="block text-sm font-medium text-gray-600 mb-1">Employee Name</label>
                         <input type="text" id="employee-name" placeholder="Employee Name" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Employee Name">
@@ -210,8 +227,81 @@
                         <input type="text" id="employee-id" placeholder="Employee ID" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Employee ID">
                     </div>
                     <div>
+                        <label for="designation" class="block text-sm font-medium text-gray-600 mb-1">Designation</label>
+                        <input type="text" id="designation" placeholder="e.g., Software Engineer" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Designation">
+                    </div>
+                    <div>
+                        <label for="department" class="block text-sm font-medium text-gray-600 mb-1">Department</label>
+                        <input type="text" id="department" placeholder="e.g., Engineering" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Department">
+                    </div>
+                    <div>
+                        <label for="date-of-joining" class="block text-sm font-medium text-gray-600 mb-1">Date of Joining</label>
+                        <input type="date" id="date-of-joining" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Date of Joining">
+                    </div>
+                    <div>
+                        <label for="dob" class="block text-sm font-medium text-gray-600 mb-1">Date of Birth</label>
+                        <input type="date" id="dob" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Date of Birth">
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 3: Statutory & Payment Details --><section>
+                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Statutory & Payment Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Statutory -->
+                    <div>
+                        <label for="pan-card" class="block text-sm font-medium text-gray-600 mb-1">PAN Card</label>
+                        <input type="text" id="pan-card" placeholder="e.g., ABCDE1234F" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="PAN Card">
+                    </div>
+                    <div>
+                        <label for="pf-number" class="block text-sm font-medium text-gray-600 mb-1">PF Number</label>
+                        <input type="text" id="pf-number" placeholder="PF Number" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="PF Number">
+                    </div>
+                    <div>
+                        <label for="uan-number" class="block text-sm font-medium text-gray-600 mb-1">UAN</label>
+                        <input type="text" id="uan-number" placeholder="UAN" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="UAN">
+                    </div>
+
+                    <!-- Payment Mode -->
+                    <div class="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6 border-t pt-6 mt-6">
+                        <div>
+                            <label for="payment-mode" class="block text-sm font-medium text-gray-600 mb-1">Payment Mode</label>
+                            <select id="payment-mode" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Payment Mode">
+                                <option value="Bank">Bank</option>
+                                <option value="UPI">UPI</option>
+                                <option value="Cash">Cash</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Bank Details (Conditional) -->
+                    <div id="bank-details" class="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="bank-name" class="block text-sm font-medium text-gray-600 mb-1">Bank Name</label>
+                            <input type="text" id="bank-name" placeholder="Bank Name" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Bank Name">
+                        </div>
+                        <div>
+                            <label for="bank-ifsc" class="block text-sm font-medium text-gray-600 mb-1">Bank IFSC Code</label>
+                            <input type="text" id="bank-ifsc" placeholder="IFSC Code" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Bank IFSC">
+                        </div>
+                        <div>
+                            <label for="bank-account" class="block text-sm font-medium text-gray-600 mb-1">Bank Account No.</label>
+                            <input type="text" id="bank-account" placeholder="Account Number" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Bank Account No.">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Employee Pay Summary --><section>
+                <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Current Pay Summary</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
                         <label for="pay-period" class="block text-sm font-medium text-gray-600 mb-1">Pay Period</label>
                         <input type="text" id="pay-period" placeholder="Pay Period (e.g., 2024-09)" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Pay Period">
+                    </div>
+                    <div>
+                        <label for="pay-date" class="block text-sm font-medium text-gray-600 mb-1">Pay Date</label>
+                        <input type="date" id="pay-date" placeholder="Pay Date" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Pay Date">
                     </div>
                     <div>
                         <label for="paid-days" class="block text-sm font-medium text-gray-600 mb-1">Paid Days</label>
@@ -221,14 +311,10 @@
                         <label for="loss-of-pay-days" class="block text-sm font-medium text-gray-600 mb-1">Loss of Pay Days</label>
                         <input type="number" id="loss-of-pay-days" placeholder="Loss of Pay Days" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Loss of Pay Days">
                     </div>
-                    <div>
-                        <label for="pay-date" class="block text-sm font-medium text-gray-600 mb-1">Pay Date</label>
-                        <input type="date" id="pay-date" placeholder="Pay Date" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" data-label="Pay Date">
-                    </div>
                 </div>
             </section>
 
-            <!-- Section 3: Income Details --><section>
+            <!-- Section 5: Income Details --><section>
                 <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Income Details</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                     
@@ -258,7 +344,7 @@
                 </div>
             </section>
 
-            <!-- Section 4: Summary --><section class="bg-gray-50 p-6 rounded-lg">
+            <!-- Section 6: Summary --><section class="bg-gray-50 p-6 rounded-lg">
                 <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Net Pay Summary</h2>
                 <div class="space-y-3">
                     <div class="flex justify-between items-center text-lg">
@@ -280,7 +366,7 @@
                 </div>
             </section>
             
-            <!-- Section 5: Actions --><section>
+            <!-- Section 7: Actions --><section>
                 <button type="button" id="generate-pdf" class="generate-btn flex items-center justify-center">
                     <div id="spinner" class="spinner"></div>
                     <span>Generate PDF</span>
@@ -314,6 +400,9 @@
             const form = document.getElementById('payslip-form');
             const generatePdfBtn = document.getElementById('generate-pdf');
             const spinner = document.getElementById('spinner');
+
+            const paymentModeSelect = document.getElementById('payment-mode');
+            const bankDetailsWrapper = document.getElementById('bank-details');
 
             // --- Link Payslip Month to Pay Period ---
             const payslipMonthInput = document.getElementById('payslip-month');
@@ -406,6 +495,14 @@
                 }, 50); // 50ms delay
             });
 
+            // 7. Conditional Bank Details
+            paymentModeSelect.addEventListener('change', (e) => {
+                if (e.target.value === 'Bank') {
+                    bankDetailsWrapper.classList.remove('hidden');
+                } else {
+                    bankDetailsWrapper.classList.add('hidden');
+                }
+            });
             // --- HELPER FUNCTIONS ---
 
             /**
@@ -482,6 +579,36 @@
             }
 
             /**
+             * Helper to get value from an element and format for PDF.
+             * @param {string} id - The element ID.
+             * @param {string} type - The element type (e.g., 'date').
+             */
+            function getValue(id, type = 'text') {
+                const el = document.getElementById(id);
+                let value = el.value || '-';
+                if (type === 'date' && el.value) {
+                    // Format date nicely, e.g., 06 Jan 2025
+                    const date = new Date(el.value);
+                    const day = date.getDate().toString().padStart(2, '0');
+                    const month = date.toLocaleString('default', { month: 'short' });
+                    const year = date.getFullYear();
+                    value = `${day} ${month} ${year}`;
+                }
+                // For 'text' or other types, just return the value or '-'
+                return value;
+            }
+
+            /**
+             * Helper to get label for an element.
+             * @param {string} id - The element ID.
+             */
+            function getLabel(id) {
+                const el = document.getElementById(id);
+                const labelEl = document.querySelector(`label[for='${id}']`);
+                return labelEl ? labelEl.textContent : (el.getAttribute('data-label') || el.placeholder);
+            }
+
+            /**
              * Main PDF Generation Logic
              */
             function generatePDF() {
@@ -499,41 +626,24 @@
                 if (logoBase64 && logoDimensions.width > 0 && logoDimensions.height > 0) {
                     try {
                         const imgType = logoBase64.startsWith('data:image/png') ? 'PNG' : 'JPEG';
-                        
-                        // Define max width for the logo in PDF units (mm)
                         const maxLogoWidth = 40; 
-                        
-                        // Calculate aspect ratio
                         const aspectRatio = logoDimensions.width / logoDimensions.height;
-
-                        // Determine the dimensions to use, maintaining aspect ratio
                         let finalLogoWidth = maxLogoWidth;
                         let finalLogoHeight = maxLogoWidth / aspectRatio;
-
-                        // If the calculated height is too large, scale based on a max height instead
-                        const maxLogoHeight = 20; // Maximum allowed height for the logo
+                        const maxLogoHeight = 20; 
                         if (finalLogoHeight > maxLogoHeight) {
                             finalLogoHeight = maxLogoHeight;
                             finalLogoWidth = maxLogoHeight * aspectRatio;
                         }
-
-                        // REMOVED: The minLogoSize check was flawed and could break aspect ratio.
-                        // The scaling above is sufficient.
-
-
-                        // Position logo to the top right
                         doc.addImage(logoBase64, imgType, docWidth - margin - finalLogoWidth, 15, finalLogoWidth, finalLogoHeight);
-                        
-                        logoActualWidth = finalLogoWidth; // Store for potential later use
+                        logoActualWidth = finalLogoWidth; 
                         logoActualHeight = finalLogoHeight;
-
                     } catch (imgError) {
                         console.error("Error adding image to PDF:", imgError);
-                        // Don't fail the whole PDF, just skip the logo
                     }
                 }
                 
-                const companyName = document.getElementById('company-name').value || 'Company Name';
+                const companyName = getValue('company-name');
                 doc.setFontSize(22);
                 doc.setFont('helvetica', 'bold');
                 doc.text(companyName, margin, cursorY);
@@ -548,73 +658,140 @@
                 doc.setFont('helvetica', 'normal');
                 doc.text(payslipTitle, margin, cursorY);
 
-                cursorY += 15; // Add space before tables
+                // Add Company Address/Contact
+                const companyAddress = getValue('company-address');
+                const companyEmail = getValue('company-email');
+                const companyNumber = getValue('company-number');
+                let companyContactY = cursorY + 5;
+                doc.setFontSize(9);
+                doc.setTextColor(107, 114, 128); // text-gray-500
+                
+                if (companyAddress !== '-') {
+                    // Split address lines and print
+                    const addressLines = doc.splitTextToSize(companyAddress, (docWidth / 2) - margin);
+                    addressLines.forEach(line => {
+                        doc.text(line, margin, companyContactY);
+                        companyContactY += 4;
+                    });
+                }
+                if (companyEmail !== '-') {
+                    doc.text(`Email: ${companyEmail}`, margin, companyContactY);
+                    companyContactY += 4;
+                }
+                if (companyNumber !== '-') {
+                    doc.text(`Phone: ${companyNumber}`, margin, companyContactY);
+                    companyContactY += 4;
+                }
 
-                // --- 2. Employee Details (Manual Text Layout) ---
+                // Ensure cursorY is below both title block and logo
+                cursorY = Math.max(cursorY + 20, 15 + logoActualHeight + 10);
+
+                // --- 2. Employee Details (Multi-column) ---
                 doc.setFontSize(14);
                 doc.setFont('helvetica', 'bold');
-                doc.text('Employee Details', margin, cursorY);
+                doc.setTextColor(0, 0, 0); // Reset color
+                doc.text(getValue('employee-name'), margin, cursorY);
+                
+                cursorY += 8;
+                doc.setDrawColor(229, 231, 235); // gray-200
+                doc.setLineWidth(0.25);
+                
+                // Helper to draw a block of info
+                const drawInfoBlock = (data) => {
+                    const colWidth = (docWidth - margin * 2) / data.length;
+                    const rowHeight = 4;
+                    doc.setFontSize(8);
+                    
+                    // Draw Headers (Labels)
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(107, 114, 128); // text-gray-500
+                    data.forEach((item, index) => {
+                        doc.text(item.label, margin + (index * colWidth), cursorY);
+                    });
+                    
+                    cursorY += rowHeight + 1;
+                    
+                    // Draw Values
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(0, 0, 0);
+                    data.forEach((item, index) => {
+                        doc.text(item.value, margin + (index * colWidth), cursorY);
+                    });
+                    
+                    cursorY += rowHeight + 2;
+                    doc.line(margin, cursorY, docWidth - margin, cursorY); // Draw line after block
+                    cursorY += 6; // Padding
+                };
+
+                // Block 1: Main Info
+                drawInfoBlock([
+                    { label: getLabel('employee-id'), value: getValue('employee-id') },
+                    { label: getLabel('date-of-joining'), value: getValue('date-of-joining', 'date') },
+                    { label: getLabel('department'), value: getValue('department') },
+                    { label: getLabel('designation'), value: getValue('designation') }
+                ]);
+
+                // Block 2: Payment Info
+                const paymentMode = getValue('payment-mode');
+                const paymentData = [{ label: getLabel('payment-mode'), value: paymentMode }];
+                if (paymentMode === 'Bank') {
+                    paymentData.push({ label: getLabel('bank-name'), value: getValue('bank-name') });
+                    paymentData.push({ label: getLabel('bank-ifsc'), value: getValue('bank-ifsc') });
+                    paymentData.push({ label: getLabel('bank-account'), value: getValue('bank-account') });
+                }
+                drawInfoBlock(paymentData);
+                
+                // Block 3: Statutory Info
+                drawInfoBlock([
+                    { label: getLabel('uan-number'), value: getValue('uan-number') },
+                    { label: getLabel('pf-number'), value: getValue('pf-number') },
+                    { label: getLabel('pan-card'), value: getValue('pan-card') },
+                    { label: getLabel('dob'), value: getValue('dob', 'date') }
+                ]);
+
+
+                // --- 3. Current Pay Summary (The old "Employee Details") ---
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Current Pay Summary', margin, cursorY);
                 cursorY += 8;
                 
-                const empDetailsInputs = [
-                    'employee-name', 'employee-id', 'pay-period', 
-                    'paid-days', 'loss-of-pay-days', 'pay-date'
+                const paySummaryInputs = [
+                    'pay-period', 'pay-date', 'paid-days', 'loss-of-pay-days'
                 ];
                 
-                const empDetailsBody = empDetailsInputs.map(id => {
-                    const el = document.getElementById(id);
-                    // Use the new label's text content first, fallback to data-label
-                    const labelEl = document.querySelector(`label[for='${id}']`);
-                    const label = labelEl ? labelEl.textContent : (el.getAttribute('data-label') || el.placeholder);
-                    let value = el.value || '-';
-                    if (el.type === 'date' && el.value) {
-                        // Format date nicely
-                        value = new Date(el.value).toLocaleDateString('en-GB'); // dd/mm/yyyy
-                    }
+                const paySummaryBody = paySummaryInputs.map(id => {
+                    const label = getLabel(id);
+                    let value = getValue(id, id === 'pay-date' ? 'date' : 'text');
                     return [label, value];
                 }).filter(row => row[1] !== '-'); // Only show rows with values
 
-                if (empDetailsBody.length > 0) {
+                if (paySummaryBody.length > 0) {
                     const leftColX = margin + 1; // Indent slightly
                     const rightColX = margin + 70; // Column for values
                     const rowHeight = 7;
-                    
                     doc.setFontSize(10);
                     
-                    empDetailsBody.forEach(row => {
+                    paySummaryBody.forEach(row => {
                         doc.setFont('helvetica', 'bold');
                         doc.text(row[0], leftColX, cursorY);
                         doc.setFont('helvetica', 'normal');
                         
-                        // Manually calculate x position for right-aligned-like text
-                        // to avoid jsPDF 'align: right' bugs
                         const valueWidth = doc.getTextWidth(row[1]);
-                        const valueX = docWidth - margin - 10 - valueWidth; // Align to right edge
-                        
-                        // But ensure it doesn't overlap the label
+                        const valueX = docWidth - margin - 10 - valueWidth;
                         const finalValueX = Math.max(rightColX, valueX); 
-                        
                         doc.text(row[1], finalValueX, cursorY);
-                        
                         cursorY += rowHeight;
                     });
                     
-                    // Add a subtle line after details
-                    cursorY -= (rowHeight / 2); // Move up slightly
-                    doc.setDrawColor(229, 231, 235); // gray-200
-                    doc.setLineWidth(0.25);
+                    cursorY -= (rowHeight / 2); 
                     doc.line(margin, cursorY, docWidth - margin, cursorY);
-                    
-                } else {
-                    doc.setFontSize(10);
-                    doc.setFont('helvetica', 'italic');
-                    doc.text('No employee details provided.', margin, cursorY);
-                    cursorY += 10;
                 }
                 
                 cursorY += 10; // Space before next section
 
-                // --- 3. Earnings and Deductions Tables (Side-by-Side) ---
+                // --- 4. Earnings and Deductions Tables (Side-by-Side) ---
                 
                 // Re-calculate totals as numbers for PDF formatting
                 let totalEarningsNum = 0;
@@ -651,9 +828,6 @@
                 });
 
                 // Add Total rows
-                // const totalEarnings = document.getElementById('total-earnings').textContent;
-                // const totalDeductions = document.getElementById('total-deductions').textContent;
-                
                 earningsBody.push([{
                     content: 'Total Earnings',
                     styles: { fontStyle: 'bold', fillColor: '#f3f4f6' }
@@ -672,7 +846,7 @@
                 
                 const tableColWidth = (docWidth - (margin * 3)) / 2; // Column width for side-by-side
                 
-                // --- 3. Earnings and Deductions Titles ---
+                // --- Earnings and Deductions Titles ---
                 doc.setFontSize(14);
                 doc.setFont('helvetica', 'bold');
                 doc.text('Earnings', margin, cursorY);
@@ -712,8 +886,7 @@
                 
                 cursorY += 15; // Space after tables
 
-                // --- 4. Net Pay Summary ---
-                // const netPay = document.getElementById('net-pay').textContent;
+                // --- 5. Net Pay Summary ---
                 const netPayInWords = document.getElementById('net-pay-in-words').textContent;
                 
                 // Draw a summary box (outline only)
@@ -739,13 +912,17 @@
                 const netPayInWordsWidth = doc.getTextWidth(netPayInWords);
                 doc.text(netPayInWords, docWidth - margin - 10 - netPayInWordsWidth, cursorY + 19);
                 
-                // --- 5. Save the PDF ---
+                // --- 6. Save the PDF ---
                 const filename = `Payslip_${(companyName || '').replace(/ /g, '_')}_${(payslipMonth || 'details')}.pdf`;
                 doc.save(filename);
             }
             
             // --- ON-LOAD INITIALIZATION ---
             calculateTotals(); // Run once on load
+            
+            // Trigger change event to set initial state of bank details
+            paymentModeSelect.dispatchEvent(new Event('change'));
+
         });
 
         // --- GLOBAL HELPER FUNCTIONS (can be accessed by inline onclick) ---
@@ -820,8 +997,4 @@
     </script>
 </body>
 </html>
-
-
-
-
 

@@ -734,21 +734,34 @@
 
                 // Block 2: Payment Info
                 const paymentMode = getValue('payment-mode');
-                const paymentData = [{ label: getLabel('payment-mode'), value: paymentMode }];
+                
                 if (paymentMode === 'Bank') {
-                    paymentData.push({ label: getLabel('bank-name'), value: getValue('bank-name') });
-                    paymentData.push({ label: getLabel('bank-ifsc'), value: getValue('bank-ifsc') });
-                    paymentData.push({ label: getLabel('bank-account'), value: getValue('bank-account') });
+                    // If mode is Bank, draw the separate payment block
+                    const paymentData = [
+                        { label: getLabel('payment-mode'), value: paymentMode },
+                        { label: getLabel('bank-name'), value: getValue('bank-name') },
+                        { label: getLabel('bank-ifsc'), value: getValue('bank-ifsc') },
+                        { label: getLabel('bank-account'), value: getValue('bank-account') }
+                    ];
+                    drawInfoBlock(paymentData);
                 }
-                drawInfoBlock(paymentData);
                 
                 // Block 3: Statutory Info
-                drawInfoBlock([
+                // This block now conditionally includes Payment Mode
+                const statutoryData = [
                     { label: getLabel('uan-number'), value: getValue('uan-number') },
                     { label: getLabel('pf-number'), value: getValue('pf-number') },
                     { label: getLabel('pan-card'), value: getValue('pan-card') },
                     { label: getLabel('dob'), value: getValue('dob', 'date') }
-                ]);
+                ];
+
+                if (paymentMode !== 'Bank') {
+                    // If mode is not Bank, add Payment Mode to the beginning of this block
+                    statutoryData.unshift({ label: getLabel('payment-mode'), value: paymentMode });
+                }
+
+                // Now draw the statutory block (which may or may not have payment mode)
+                drawInfoBlock(statutoryData);
 
 
                 // --- 3. Current Pay Summary (The old "Employee Details") ---
@@ -997,4 +1010,6 @@
     </script>
 </body>
 </html>
+
+
 
